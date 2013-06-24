@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+var DDPClient = require('ddp')
+  , subscription = process.argv[2]
+  , client;
+
+if (!subscription) {
+  console.log('Usage: subscribe <subscription>');
+  process.exit(1);
+}
+
+client = new DDPClient({
+  host: 'localhost',
+  port: 3000
+});
+
+client.connect(function (err) {
+  if (err) {
+    console.log('Connection error: ', err);
+    return;
+  }
+
+  client.subscribe(subscription, [], function () {});
+});
+
+client.on('message', function (msg) {
+  console.log('[msg]: ' + msg);
+});
